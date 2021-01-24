@@ -1,0 +1,57 @@
+---
+title: "Analyse en Composantes Principales"
+author: "Jeu de données data_baby_base"
+output:
+  word_document: default
+---
+Ce jeu de données contient 362 individus et 44 variables, 6 variables qualitatives sont illustratives.
+
+- - -
+
+```{r, echo = FALSE}
+library(FactoMineR)
+load('C:/Users/yassi/OneDrive/Université/S7/RDSM/DM2/Workspace.RData')
+```
+### 1. Observation d'individus extrêmes
+L'analyse des graphes ne révèle aucun individu singulier.
+
+- - -
+
+### 2. Distribution de l'inertie
+L'inertie des axes factoriels indique d'une part si les variables sont structurées et suggère d'autre part le nombre judicieux de composantes principales à étudier.
+
+Les 2 premiers axes de l' analyse expriment **99.98%** de l'inertie totale du jeu de données ; cela signifie que 99.98% de la variabilité totale du nuage des individus (ou des variables) est représentée dans ce plan.
+C'est un pourcentage extrêmement élevé, et le premier plan représente donc parfaitement bien la variabilité contenue dans l'ensemble du jeu de données actif.
+Cette valeur est nettement supérieure à la valeur référence de **9.02%**, la variabilité expliquée par ce plan est donc hautement significative
+(cette intertie de référence est le quantile 0.95-quantile de la distribution des pourcentages d'inertie obtenue en simulant 2404 jeux de données aléatoires de dimensions comparables sur la base d'une distribution normale).
+
+Du fait de ces observations, il n'est absolument pas nécessaire pour l'analyse d'interpréter les dimensions suivantes.
+
+```{r, echo = FALSE, fig.height = 3.5, fig.width = 5.5}
+par(mar = c(2.6, 4.1, 1.1, 2.1))
+ggplot2::ggplot(cbind.data.frame(x=1:nrow(res$eig),y=res$eig[,2])) + ggplot2::aes(x=x, y=y)+ ggplot2::geom_col(fill="blue") + ggplot2::xlab("Dimension") + ggplot2::ylab("Pourcentage d'inertie") + ggplot2::ggtitle("Décomposition de l'inertie totale") + ggplot2::theme_light() + ggplot2::theme(plot.title = ggplot2::element_text(hjust =0.5)) + ggplot2::scale_x_continuous(breaks=1:nrow(res$eig))
+```
+
+**Figure 2 - Décomposition de l'inertie totale**
+*Le premier facteur est largement prépondérant : il explique a lui seul 99.91% de la variabilité totale des données.*
+*Il convient de noter que dans un tel cas, la variabilité liée aux autres composantes peut être dénuée de sens, en dépit d'un pourcentage élevé.*
+
+Une estimation du nombre pertinent d'axes à interpréter suggère de restreindre l'analyse à la description des 1 premiers axes.
+Ces composantes révèlent un taux d'inertie supérieur à celle du quantile 0.95-quantile de distributions aléatoires (99.91% contre 4.68%).
+Cette observation suggère que seul cet axe est porteur d'une véritable information.
+En conséquence, la description de l'analyse sera restreinte à ces seuls axes.
+
+- - -
+
+### 3. Description de la dimension 1
+
+```{r, echo = FALSE, fig.height = 3.5, fig.width = 5.5}
+drawn <-
+"325"
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = c(1,2), choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 3.1 - Graphe des individus (ACP)**
+*Les individus libellés sont ceux ayant la plus grande contribution à la construction du plan.*
+
